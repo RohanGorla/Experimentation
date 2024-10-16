@@ -3,11 +3,11 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { google } from "googleapis";
 import fs from "fs";
-import { url } from "inspector";
+import multer from "multer";
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 const PORT = 8008;
@@ -49,12 +49,12 @@ async function uploadFiles() {
   //   }
 
   const fileMetaData = {
-    name: "test_image.jpeg",
+    name: "/test/test_image.jpeg",
     parents: [process.env.ID],
   };
 
   const media = {
-    body: fs.createReadStream("./affiliate_mobile_image.jpeg"),
+    body: fs.createReadStream("./vivo t3.jpeg"),
     mimeType: "image/jpeg",
   };
   const response = await drive.files.create({
@@ -98,6 +98,30 @@ app.get("/getphotos", async (req, res) => {
     }
   }
   res.send(urls);
+});
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const name = req.headers.name;
+    console.log(name);
+    const path = `uploads/${name}`;
+    if (fs.existsSync(path)) {
+      cb(null, path);
+    } else {
+      fs.mkdirSync(path);
+      cb(null, path);
+    }
+  },
+  filename: function (req, file, callback) {
+    const extension = file.originalname.split(".")[1];
+    const fileName = file.originalname.split(".")[0];
+    callback(null, `${fileName}-${Date.now()}.${extension}`);
+  },
+});
+const upload = multer({ storage: storage });
+
+app.post("/sendphotos", upload.array("photos"), (req, res) => {
+  console.log("in req", req.headers.name);
 });
 
 app.listen(PORT, () => {
