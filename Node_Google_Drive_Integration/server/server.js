@@ -24,7 +24,7 @@ async function authorizeUser() {
   return jwtClient;
 }
 
-async function uploadFiles() {
+async function uploadFiles(file, imageName, mimetype) {
   const auth = await authorizeUser();
   const drive = google.drive({ version: "v3", auth: auth });
 
@@ -48,14 +48,16 @@ async function uploadFiles() {
   //     });
   //   }
 
+  console.log("data -> ", file, imageName, mimetype);
+
   const fileMetaData = {
-    name: "/test/test_image.jpeg",
+    name: imageName,
     parents: [process.env.ID],
   };
 
   const media = {
-    body: fs.createReadStream("./vivo t3.jpeg"),
-    mimeType: "image/jpeg",
+    body: fs.createReadStream(`./uploads/${file}`),
+    mimeType: mimetype,
   };
   const response = await drive.files.create({
     resource: fileMetaData,
@@ -103,7 +105,6 @@ app.get("/getphotos", async (req, res) => {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const name = req.headers.name;
-    console.log(name);
     const path = `uploads/${name}`;
     if (fs.existsSync(path)) {
       cb(null, path);
@@ -120,8 +121,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.post("/sendphotos", upload.array("photos"), (req, res) => {
-  console.log("in req", req.headers.name);
+app.post("/sendphotos", upload.array("photos"), async (req, res) => {
+  const actualFiles = req.files;
+  console.log(actualFiles);
+  const files = fs.readdirSync(`uploads/${req.headers.name}`);
+  for (let i = 0; i < actualFiles.length; i++) {
+    const imageName = `${req.headers.name}-${files[i]}`;
+    const path = `${req.headers.name}/${files[i]}`;
+    let response = await uploadFiles(path, imageName, actualFiles[i].mimetype);
+    fs.rmSync(`uploads/${req.headers.name}/${files[i]}`);
+  }
+  fs.rmSync(`uploads/${req.headers.name}`, { recursive: true, force: true });
+  res.send({ access: true });
 });
 
 app.listen(PORT, () => {

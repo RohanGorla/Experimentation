@@ -20,25 +20,28 @@ function App() {
   }
 
   async function sendPhotos() {
-    let formData = new FormData();
     let files = fileRefs.current.files;
-    for (let i = 0; i < files.length; i++) {
-      formData.append("photos", files[i]);
-    }
-    const response = await axios.post(
-      "http://localhost:8008/sendphotos",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          name: `${path}-${Date.now()}`,
-        },
+    if (files.length > 0) {
+      let formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("photos", files[i]);
       }
-    );
+      const response = await axios.post(
+        "http://localhost:8008/sendphotos",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            name: `${path}-${Date.now()}`,
+          },
+        }
+      );
+      console.log(response);
+    }
   }
 
   useEffect(() => {
-    // getPhotos();
+    getPhotos();
   }, []);
 
   return (
@@ -59,10 +62,10 @@ function App() {
         ></input>
         <input type="submit"></input>
       </form>
-      {/* {images?.map((image, index) => {
+      {images?.map((image, index) => {
         let url = "https://drive.google.com/thumbnail?id=" + image.id;
         return <img key={index} src={url}></img>;
-      })} */}
+      })}
     </>
   );
 }
