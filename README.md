@@ -1,3 +1,10 @@
-# Hi! I am Rohan! Welcome to my experimentation zone!
+# Hi! Welcome to my coding lab!
 
-##### This repository contains all my experimental coding files. Weather it be a new topic that I'm learning, a new feature that I want to test or just a small project which hepls me learn and discover new things, I will be keeping all those folders here.
+Hi, I am Rohan. Welcome to my coding experimentation repository! This repository contains all my experimental coding files and coding concepts that I want to learn, including this readme file that I will be using to learn how to write better readme's!
+
+## Type of files this repo will contain?
+
+* Some useful code snippets.
+* New things I learn about web dev or coding in general.
+* Small but interesting chunks of big projects.
+* New features/concepts that I want to work on etc...
