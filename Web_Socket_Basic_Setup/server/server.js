@@ -1,8 +1,8 @@
 import express from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import "dotenv/config";
 
 const app = express();
@@ -13,12 +13,15 @@ const PORT = process.env.PORT || 8008;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
+app.get("/", (req, res) => {
+  res.sendFile(join(__dirname, "index.html"));
 });
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
 
 server.listen(PORT, () => {
