@@ -15,6 +15,13 @@ function App() {
     setMessage("");
   }
 
+  useEffect(() => {
+    socket.on("message_output", (payload) => {
+      console.log(`Payload is: ${payload.name} : ${payload.message}`);
+      setMessages([...messages, payload]);
+    });
+  });
+
   return (
     <>
       <div>
