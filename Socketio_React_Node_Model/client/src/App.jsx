@@ -5,8 +5,9 @@ import "./App.css";
 const socket = io("http://localhost:5000");
 
 function App() {
-  const [message, setMessage] = useState("");
   const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   async function submitMessage(e) {
     e.preventDefault();
@@ -16,6 +17,15 @@ function App() {
 
   return (
     <>
+      <div>
+        {messages.map((message, index) => {
+          return (
+            <p key={index}>
+              {message.name} : {message.message}
+            </p>
+          );
+        })}
+      </div>
       <form onSubmit={submitMessage}>
         <input
           type="text"
