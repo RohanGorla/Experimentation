@@ -19,6 +19,10 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("A connection has been made!");
+  socket.on("message_input", (payload) => {
+    console.log("Payload is: ", payload);
+    io.emit("message_output", payload);
+  });
 });
 
 server.listen(PORT, () =>
