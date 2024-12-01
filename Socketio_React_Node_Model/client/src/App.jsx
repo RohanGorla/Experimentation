@@ -10,6 +10,8 @@ function App() {
 
   async function submitMessage(e) {
     e.preventDefault();
+    socket.emit("message_input", { message, name });
+    setMessage("");
   }
 
   return (
