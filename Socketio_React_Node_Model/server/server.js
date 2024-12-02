@@ -22,6 +22,9 @@ client
 
 const PORT = process.env.PORT || 3000;
 
+const db = client.db(process.env.DB_NAME);
+const collection = db.collection("chatapptest");
+
 app.get("/", (req, res) => {
   res.json("connected");
 });
