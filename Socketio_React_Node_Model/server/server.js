@@ -33,8 +33,9 @@ io.on("connection", async (socket) => {
   console.log("A connection has been made!");
   const result = await collection.find().toArray();
   io.emit("all_chat", result);
-  socket.on("message_input", (payload) => {
+  socket.on("message_input", async (payload) => {
     console.log("Payload is: ", payload);
+    await collection.insertOne({ name: payload.name, msg: payload.message });
     io.emit("message_output", payload);
   });
 });
