@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { MongoClient } from "mongodb";
 
 const app = express();
 const server = createServer(app);
@@ -10,6 +11,14 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+const client = new MongoClient(process.env.DB_URL);
+client
+  .connect()
+  .then(() => {
+    console.log("MongoDB Connected!");
+  })
+  .catch((err) => console.log(err));
 
 const PORT = process.env.PORT || 3000;
 
