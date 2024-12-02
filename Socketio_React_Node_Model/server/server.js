@@ -5,6 +5,9 @@ import { Server } from "socket.io";
 import { MongoClient } from "mongodb";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+/* SOCKET SERVER CREATION AND CONNECTION */
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -12,6 +15,7 @@ const io = new Server(server, {
   },
 });
 
+/* MONGODB CLIENT CREATION AND CONNECTION */
 const client = new MongoClient(process.env.DB_URL);
 client
   .connect()
@@ -20,15 +24,21 @@ client
   })
   .catch((err) => console.log(err));
 
-const PORT = process.env.PORT || 3000;
-
 const db = client.db(process.env.DB_NAME);
 const collection = db.collection("chatapptest");
 
+/* BASIC GET ROUTE */
 app.get("/", async (req, res) => {
   res.json("connected...");
 });
 
+/* FOR POSTMAN TESTING */
+app.get("/getallchat", async (req, res) => {
+  const result = await collection.find().toArray();
+  res.json(result);
+});
+
+/* SOCKET CONNECTION */
 io.on("connection", async (socket) => {
   console.log("A connection has been made!");
   const result = await collection.find().toArray();
@@ -40,6 +50,7 @@ io.on("connection", async (socket) => {
   });
 });
 
+/* SERVER CONNECTION */
 server.listen(PORT, () =>
   console.log(`server running at http://localhost:${PORT}`)
 );
