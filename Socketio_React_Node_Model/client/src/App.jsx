@@ -20,6 +20,9 @@ function App() {
       console.log(`Payload is: ${payload.name} : ${payload.message}`);
       setMessages([...messages, payload]);
     });
+    socket.on("all_chat", (payload) => {
+      console.log(payload);
+    });
   });
 
   return (
