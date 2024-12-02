@@ -26,12 +26,13 @@ const db = client.db(process.env.DB_NAME);
 const collection = db.collection("chatapptest");
 
 app.get("/", async (req, res) => {
-  const result = await collection.find().toArray();
-  res.json(result);
+  res.json("connected...");
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log("A connection has been made!");
+  const result = await collection.find().toArray();
+  io.emit("all_chat", result);
   socket.on("message_input", (payload) => {
     console.log("Payload is: ", payload);
     io.emit("message_output", payload);
