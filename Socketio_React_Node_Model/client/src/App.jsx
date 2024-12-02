@@ -22,6 +22,7 @@ function App() {
     });
     socket.on("all_chat", (payload) => {
       console.log(payload);
+      setMessages(payload);
     });
   });
 
@@ -31,7 +32,7 @@ function App() {
         {messages.map((message, index) => {
           return (
             <p key={index}>
-              {message.name} : {message.message}
+              {message.name} : {message.message || message.msg}
             </p>
           );
         })}
