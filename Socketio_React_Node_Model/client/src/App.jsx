@@ -24,7 +24,7 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="Messages_Box">
         {messages.map((message, index) => {
           return (
             <p key={index}>
@@ -34,6 +34,7 @@ function App() {
         })}
       </div>
       <form onSubmit={submitMessage}>
+        <label>Enter Name</label>
         <input
           type="text"
           value={name}
@@ -41,6 +42,7 @@ function App() {
             setName(e.target.value);
           }}
         ></input>
+        <label>Enter Message</label>
         <input
           type="text"
           value={message}
