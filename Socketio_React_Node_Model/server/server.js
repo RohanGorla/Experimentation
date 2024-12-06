@@ -28,7 +28,7 @@ const db = client.db(process.env.DB_NAME);
 const collection = db.collection("chatapptest");
 
 async function deleteRecords() {
-  await collection.deleteOne({ name: 'Goku' });
+  await collection.deleteMany({ name: 'Rohan' });
 }
 
 // deleteRecords()
