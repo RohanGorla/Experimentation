@@ -27,6 +27,12 @@ client
 const db = client.db(process.env.DB_NAME);
 const collection = db.collection("chatapptest");
 
+async function deleteRecords() {
+  await collection.deleteOne({ name: 'Goku' });
+}
+
+// deleteRecords()
+
 /* BASIC GET ROUTE */
 app.get("/", async (req, res) => {
   res.json("connected...");
