@@ -7,14 +7,21 @@ const socket = io("http://localhost:5000");
 
 function App() {
   const [name, setName] = useState("");
+  const [room, setRoom] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [roomMessages, setRoomMessages] = useState([]);
 
   /* SEND MESSAGE FUNCTION */
   async function submitMessage(e) {
     e.preventDefault();
     socket.emit("message_input", { message, name });
     setMessage("");
+  }
+
+  /* GET ROOM CHAT */
+  async function getRoomChat() {
+    
   }
 
   useEffect(() => {
@@ -34,7 +41,7 @@ function App() {
     <>
       {/* SHOW ALL MESSAGES BOX */}
       <div className="Messages_Box">
-        {messages.map((message, index) => {
+        {roomMessages.map((message, index) => {
           return (
             <p key={index}>
               {message.name} : {message.message || message.msg}
@@ -52,6 +59,22 @@ function App() {
             setName(e.target.value);
           }}
         ></input>
+        <label>Enter Room</label>
+        <input
+          type="text"
+          value={room}
+          onChange={(e) => {
+            setRoom(e.target.value);
+          }}
+        ></input>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            getRoomChat();
+          }}
+        >
+          Pick Room
+        </button>
         <label>Enter Message</label>
         <input
           type="text"
