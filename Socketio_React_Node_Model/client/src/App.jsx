@@ -21,7 +21,7 @@ function App() {
 
   /* GET ROOM CHAT */
   async function getRoomChat() {
-    
+    socket.emit("join room", room);
   }
 
   useEffect(() => {
