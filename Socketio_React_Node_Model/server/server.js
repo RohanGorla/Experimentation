@@ -47,12 +47,19 @@ app.get("/getallchat", async (req, res) => {
 /* SOCKET CONNECTION */
 io.on("connection", async (socket) => {
   console.log("A connection has been made!");
+  /* GET ALL CHATS DATA AND SEND IT TO CLIENT */
   const result = await collection.find().toArray();
   io.emit("all_chat", result);
+  /* CATCH INPUT MESSAGE AND STORE THEM IN DB */
   socket.on("message_input", async (payload) => {
     console.log("Payload is: ", payload);
     await collection.insertOne({ name: payload.name, msg: payload.message });
     io.emit("message_output", payload);
+  });
+  /* JOIN A SPECIFIC ROOM IN SOCKET */
+  socket.on('join room', (roomName) => {
+    socket.join(roomName);
+    console.log(`Joined room: ${roomName}`);
   });
 });
 
