@@ -19,9 +19,16 @@ function App() {
     setMessage("");
   }
 
-  /* GET ROOM CHAT */
+  /* JOIN ROOM */
   async function getRoomChat() {
     socket.emit("join room", room);
+  }
+
+  /* SEND MESSAGE TO A ROOM */
+  async function submitRoomMessage(e) {
+    e.preventDefault();
+    socket.emit("message_input_room", { message, name, room });
+    setMessage("");
   }
 
   useEffect(() => {
@@ -34,6 +41,10 @@ function App() {
     socket.on("all_chat", (payload) => {
       console.log(payload);
       setMessages(payload);
+    });
+    /* RECEIVE MESSAGES FROM A ROOM */
+    socket.on("message_output_room", (payload) => {
+      console.log(payload.message);
     });
   });
 
@@ -50,7 +61,7 @@ function App() {
         })}
       </div>
       {/* CHAT MESSAGE FORM */}
-      <form onSubmit={submitMessage}>
+      <form onSubmit={submitRoomMessage}>
         <label>Enter Name</label>
         <input
           type="text"
