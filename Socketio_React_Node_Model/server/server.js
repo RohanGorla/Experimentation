@@ -28,7 +28,7 @@ const db = client.db(process.env.DB_NAME);
 const collection = db.collection("chatapptest");
 
 async function deleteRecords() {
-  await collection.deleteMany({ name: 'Rohan' });
+  await collection.deleteMany({ name: "Rohan" });
 }
 
 // deleteRecords()
@@ -57,9 +57,13 @@ io.on("connection", async (socket) => {
     io.emit("message_output", payload);
   });
   /* JOIN A SPECIFIC ROOM IN SOCKET */
-  socket.on('join room', (roomName) => {
+  socket.on("join room", (roomName) => {
     socket.join(roomName);
     console.log(`Joined room: ${roomName}`);
+  });
+  /* RECEIVE AND SEND MESSAGES TO A ROOM */
+  socket.on("message_input_room", (payload) => {
+    io.to(payload.room).emit("message_output_room", payload);
   });
 });
 
